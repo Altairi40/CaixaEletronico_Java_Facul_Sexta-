@@ -13,10 +13,12 @@ public class CaixaEletronico {
             menu();
             int opcao = scan.nextInt();
             scan.nextLine();
+            printLinhas();
 
             switch (opcao) {
                 case 1:
                     acessarConta(scan, contas, contador);
+
                     break;
                 case 2:
                     contas[contador] = criarConta(scan, new Conta());
@@ -91,6 +93,8 @@ public class CaixaEletronico {
                 System.out.println("Digite sua senha: ");
                 String senha = scan.nextLine();
 
+                printLinhas();
+
             /* O responsável para ver se o CPF + Senha em questão
             * está dentro do Vetor "contas" */
                 boolean acessoPermitido = false;
@@ -113,7 +117,7 @@ public class CaixaEletronico {
 
             // Após a confirmação de Login
                 if (acessoPermitido){
-                    System.out.println("\nMenu da Conta");
+                    menuConta(scan, contas[indiceConta]);
                     printLinhas();
                 } else {
                     System.out.println("\nAcesso Negado");
@@ -122,6 +126,74 @@ public class CaixaEletronico {
                 }
 
 
+            }
+        }
+
+    /* Criando o Menu após o login da Conta, permitindo Sacar, Depositar,
+    * Ver quanto de saldo tem na conta */
+        public static void menuConta(Scanner scan, Conta conta){
+            boolean sair = false;
+
+            while (!sair){
+                System.out.println("Menu da Conta:");
+                printLinhas();
+
+                System.out.println("1- Ver Saldo na Conta");
+                System.out.println("2- Sacar Dinheiro");
+                System.out.println("3- Depositar Dinheiro");
+                System.out.println("4- Status da Conta");
+                System.out.println("5- Sair");
+
+                int opcao = scan.nextInt();
+                scan.nextLine();
+                printLinhas();
+
+                // Estrutura do Menu.
+                switch (opcao){
+                    case 1:
+                        System.out.println("Seu Saldo: " + conta.getSaldo());
+                        printLinhas();
+                        break;
+
+                    case 2:
+                        System.out.println("Insira o valor do saque: ");
+                        double saque = scan.nextDouble();
+                        scan.nextLine();
+                        if (saque <= conta.getSaldo()) { // Garante que o saque só é realizado se tiver dinheiro na conta.
+                            conta.setSaldo(conta.getSaldo() - saque);
+
+                            System.out.println("Saque realizado com sucesso.");
+                            System.out.println("Saldo atual: " + conta.getSaldo());
+                            printLinhas();
+                        } else {
+                            System.out.println("Saldo insuficiente na conta.");
+                            printLinhas();
+                        }
+                        break;
+
+                    case 3:
+                        System.out.println("Insira o valor do deposito: ");
+                        double deposito = scan.nextDouble();
+                        scan.nextLine();
+                        conta.setSaldo(conta.getSaldo() + deposito);
+
+                        System.out.println("Deposito realizado com sucesso.");
+                        System.out.println("Saldo atual: " + conta.getSaldo());
+                        printLinhas();
+                        break;
+
+                    case 4:
+                        conta.status();
+                        printLinhas();
+                        break;
+
+                    case 5:
+                        sair = true;
+                        break;
+
+                    default:
+                        System.out.println("Opção inválida, tente novamente.");
+                }
             }
         }
 }
